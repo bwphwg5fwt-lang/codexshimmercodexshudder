@@ -61,7 +61,17 @@ npm test
 
 Tests use Node's built-in test runner and a mocked OpenAI endpoint. They exercise the actual local HTTP routes, server-only authentication, both raw and JSON-wrapped SDP answers, validation, origin/host/nonce rejection, rate limits, sanitised failures, and browser-controller connection, mute, autoplay recovery and cleanup. They also cover disconnecting while microphone permission or the SDP exchange is pending. Tests do not contact OpenAI or require an API key.
 
-Implementation validation: syntax checks and all 14 automated tests passed under Node 24.22.1. A paid live OpenAI audio session and a physical microphone/browser compatibility test were not performed in the build environment. Offline tests cannot verify model access, actual ICE/media transport, audio quality, Safari behaviour or iOS voice equivalence.
+The GitHub Actions workflow in `.github/workflows/validate.yml` runs these same commands on Node 22 and 24 for pull requests when opened, updated with new commits, reopened, edited or marked ready for review, and on pushes to `main`. Each matrix job has a five-minute timeout; a newer update cancels an older run. There are no dependencies to install. The workflow uses commit-pinned actions, read-only repository permissions and checkout without persisted credentials. It does not use repository secrets, set `OPENAI_API_KEY`, load `.env`, or run a live OpenAI session. No API key should be added to GitHub for these checks.
+
+Automated validation: syntax checks and all 14 tests passed locally under Node 24.22.1. GitHub-hosted results are recorded separately in the pull request's Checks tab; a local pass alone does not establish a CI pass. A paid live OpenAI audio session and a physical microphone/browser compatibility test were not performed in the build environment. Offline tests cannot verify model access, actual ICE/media transport, audio quality, Safari behaviour or iOS voice equivalence.
+
+Before merging, complete and record these manual checks separately from CI:
+
+- A live OpenAI session with a valid server-side key: confirm model access, SDP/ICE negotiation, generated audio and transcript delivery.
+- A physical microphone and speaker/headphone test: confirm input, output, interruption, mute, permission denial and microphone release on disconnect.
+- An iPhone Safari compatibility test using an appropriately authenticated HTTPS deployment (the loopback-only server cannot be opened from a separate phone): confirm permissions, autoplay recovery, WebRTC media and reconnect behaviour. Record the iOS/browser version and results.
+
+These checks remain uncompleted. Green CI does not establish audio quality, device compatibility, or equivalence to ChatGPT's native iOS voice functionality.
 
 For the live smoke test, connect with a valid API key, speak and hear a reply, confirm the assistant transcript appears, mute and confirm speech is no longer received, then disconnect and confirm the browser microphone indicator clears. Reconnect with a different voice. Deny microphone access once and confirm the page gives recovery instructions. Use browser developer tools to confirm `/api/session` sends no API key. Do not share captured SDP or network exports publicly.
 
