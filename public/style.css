@@ -1,0 +1,17 @@
+:root { color-scheme: light dark; font: 17px/1.6 system-ui, sans-serif; }
+body { margin: 0; padding: 2rem 1rem; }
+main { max-width: 760px; margin: auto; }
+h1 { font-size: 1.8rem; line-height: 1.2; }
+h2 { font-size: 1.25rem; }
+label { display: block; margin-top: 1.1rem; font-weight: 600; }
+select, textarea, button { font: inherit; padding: .55rem .8rem; border: 1px solid #888; border-radius: 4px; }
+textarea { width: 100%; box-sizing: border-box; }
+select { min-width: 12rem; }
+.controls { display: flex; flex-wrap: wrap; gap: .6rem; margin-top: 1.5rem; }
+button { cursor: pointer; }
+button:disabled { cursor: default; opacity: .5; }
+:focus-visible { outline: 3px solid #4083e0; outline-offset: 3px; }
+#status { padding: .7rem; border-left: 3px solid #4083e0; }
+audio { width: 100%; }
+#transcript { max-height: 22rem; overflow: auto; white-space: pre-wrap; overflow-wrap: anywhere; }
+[hidden] { display: none; }
